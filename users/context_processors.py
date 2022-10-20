@@ -6,11 +6,13 @@ def username_processor(request):
 
     try:
         username = request.session['username']
-        return {
-        'username' : username,
-    }
+
 
 
     except:
-        return redirect('user_login')
-    
+        username = ""
+        
+    return{
+        'username' : username,
+    }
+
