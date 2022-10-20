@@ -1,0 +1,25 @@
+{% extends 'user_base.html' %}
+
+
+{% block content %}
+<body>
+    <div class="container m-5">
+        <div class="row justify-content-center">
+            <div class="col">
+
+                <div class="card">
+                    <label>Gallery name</label>
+                    <p>{{gallery.name}}</p>
+                    <label>Gallery description</label>
+                    <p>{{gallery.description }}</p>
+                </div>
+                <a href="{% url 'user_home' %}" class="btn btn-outline-dark my-3">Back</a>
+                <a href="{% url 'gallery_update' gallery.slug %}" class="btn btn-outline-dark my-3">Update</a>
+                <a href="{% url 'gallery_delete' gallery.slug %}" class="btn btn-outline-dark my-3" onclick="return confirm('Are you sure to delete this?')">Delete</a>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+{% endblock %}

@@ -1,0 +1,10 @@
+<h1>Register</h1>
+
+<form method = "POST" action="">
+{% csrf_token %}
+{{form.as_p}}
+<input type="submit" value="submit"></input>
+</form>
+
+{{form.email.errors}}    
+{{form.non_field_errors}}

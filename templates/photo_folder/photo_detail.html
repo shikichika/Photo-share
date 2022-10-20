@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <style>
+        .image-thumbail {
+            object-fit: cover;
+        }
+    </style>
+
+<body>
+    <div class="container p-5 m-5">
+        <div class="row justify-content-center">
+            <div class="col">
+
+                <div class="card">
+                    <img style="max-width: 100%; max-height: 100%;" src="{{photo.image.url}}" class="image-thumbail m-5"
+                        alt="...">
+                    <p>{{photo.title}}</p>
+                    <p>{{photo.category}}</p>
+                    <p>{{photo.description }}</p> 
+                </div>
+                <a href="{% url 'gallery' %}" class="btn btn-outline-dark my-3">Back</a>
+                <a href="{% url 'photo_update' photo.id %}" class="btn btn-outline-dark my-3">Update</a>
+                <a href="{% url 'photo_delete' photo.id %}" class="btn btn-outline-dark my-3" onclick="return confirm('Are you sure to delete this?')">Delete</a>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+{% endblock %}

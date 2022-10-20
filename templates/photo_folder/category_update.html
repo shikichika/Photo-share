@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container m-5">
+
+    <div class="container p-5 m-5">
+        <div class="row justify-content-center">
+            <div class="col">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="card">
+                        <div class="m-3">
+                            <label>Category</label>
+                            <input name="category" type="text" value="{{category.name}}">
+                        </div>
+                        <button type="submit" class="btn btn-outline-dark my-3">Update</button>
+                    </div>        
+                </form>
+                <a href="{% url 'categories_list' %}" class="btn btn-outline-dark my-3">Back</a>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
