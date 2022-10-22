@@ -1,0 +1,38 @@
+{% extends 'user_base.html' %}
+
+
+{% block content %}
+
+<style>
+</style>
+<main class="container p-5 m-5">
+    <div class="row justify-content-center">
+        <div class="col">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="card">
+                    <h1>Change username</h1>
+                    <div class="m-3">
+                        <p>{{email}}</p>
+                    </div>
+
+                    <div class="m-3">
+                        <label>New Username</label>
+                        <input name="new_username" type="text" placeholder="New username here">
+                    </div>
+                    {% for message in messages %}
+                    <p {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                        {{ message }}
+                    </p>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-outline-dark my-3" onclick="return confirm('Are you sure to update this?')">Update</button>
+                </div>
+            </form>
+
+
+            <a href="{% url 'user_detail' %}" class="btn btn-outline-dark my-3">Back</a>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

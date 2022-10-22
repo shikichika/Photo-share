@@ -1,6 +1,5 @@
 from django import forms
 
-
 from .models import Owner
 
 
@@ -22,6 +21,8 @@ class RegisterForm(forms.ModelForm):
         self.fields['username'].widget.attrs['placeholder'] ='Enter username'
         self.fields['email'].widget.attrs['placeholder'] ='Enter email'
 
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] ='form-control'
 
     def clean_password(self):
         password = self.cleaned_data.get('password')
@@ -69,6 +70,9 @@ class RegisterForm(forms.ModelForm):
         return email
         
 class LoginForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={
+        'placeholder':'Enter password',
+    }))
     class Meta:
         model = Owner
         fields = ['email', 'password']
@@ -89,6 +93,3 @@ class LoginForm(forms.ModelForm):
             raise forms.ValidationError(
                 'Invalid value'
             )
-        
-
-    

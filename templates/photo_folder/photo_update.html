@@ -2,41 +2,47 @@
 
 {% block content %}
 
-    <body>
-        <div class="container p-5 m-5">
-            <div class="row justify-content-center">
-                <div class="col">
-                    <form method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="card">
-                            <img name="image" style="max-width: 100%; max-height: 100%;" src="{{photo.image.url}}"
-                                class="image-thumbail m-5" alt="...">
-                            <div class="m-3">
-                                <label>Title</label>
-                                <input name="title" type="text" value="{{photo.title}}">
-                            </div>
-                            <div class="m-3">
-                                <label>Category</label>
-                                <select name="category">
-                                    {% for category in categories %}
-                                    <option value="{{category}}">{{category}}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <div class="m-3">
-                                <label>Discription</label>
-                                <input name="description " type="text" value="{{photo.description }}">
-                            </div>
-                            <button type="submit" class="btn btn-outline-dark my-3" onclick="return confirm('Are you sure to update this?')">Update</button>
+<body>
+    <div class="container p-5 m-5">
+        <div class="row justify-content-center">
+            <div class="col">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="card">
+                        <img name="image" style="max-width: 100%; max-height: 100%;" src="{{photo.image.url}}"
+                            class="image-thumbail m-5" alt="...">
+                        <div class="m-3">
+                            <label>Title</label>
+                            <input name="title" type="text" value="{{photo.title}}">
                         </div>
-                    </form>
+                        <div class="m-3">
+                            <label>Category</label>
+                            <select name="category">
+                                {% for category in categories %}
+                                <option value="{{category}}">{{category}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="m-3">
+                            <label>Discription</label>
+                            <input name="description " type="text" value="{{photo.description }}">
+                        </div>
+                        {% for message in messages %}
+                        <p {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                            {{ message }}
+                        </p>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-outline-dark my-3"
+                            onclick="return confirm('Are you sure to update this?')">Update</button>
+                    </div>
+                </form>
 
 
-                    <a href="{% url 'photo_detail' photo.id %}" class="btn btn-outline-dark my-3">Back</a>
-                </div>
+                <a href="{% url 'photo_detail' photo.id %}" class="btn btn-outline-dark my-3">Back</a>
             </div>
-
         </div>
-    </body>
+
+    </div>
+</body>
 
 {% endblock %}

@@ -13,6 +13,7 @@ urlpatterns = [
     path('categories_list/', views.categories_list, name='categories_list'),
     path('category_update/<str:pk>/', views.category_update, name='category_update'),
 
-    path('gallery_login/', views.gallery_login, name = 'gallery_login')
+    path('gallery_login/', views.gallery_login, name = 'gallery_login'),
+    path('gallery_logout/', views.gallery_logout, name='gallery_logout')
 
 ]

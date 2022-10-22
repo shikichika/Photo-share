@@ -23,7 +23,11 @@
                         <label>Description</label>
                         <input name="description" class="form-control" type="text" placeholder="Description here">
                     </div>
-
+                    {% for message in messages %}
+                    <p {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                        {{ message }}
+                    </p>
+                    {% endfor %}
                     <button type="submit" class="btn btn-outline-dark m-3">Create</button>
                 </form>
 

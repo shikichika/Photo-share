@@ -1,0 +1,30 @@
+{% extends 'user_base.html' %}
+
+
+{% block content %}
+
+<main class="container">
+
+    <div class="bg-light p-5 rounded mt-5">
+        <h1>Change your username</h1>
+        <p class="lead">You can change your username here</p>
+        <a class="btn btn-lg btn-primary" href="{% url 'user_update_username' %}" role="button">Update the username »</a>
+    </div>
+
+
+    <div class="bg-light p-5 rounded mt-5">
+        <h1>Change your password</h1>
+        <p class="lead">You can change your password here</p>
+        <a class="btn btn-lg btn-primary" href="{% url 'user_update' %}" role="button">Update the password »</a>
+    </div>
+
+    <div class="bg-light p-5 rounded mt-5">
+        <h1>Delete your account</h1>
+        <p class="lead">Please check your all galleries deleted before you delete your account</p>
+        <a class="btn btn-lg btn-primary" href="{% url 'user_delete_form' %}" role="button">Delete the account »</a>
+    </div>
+
+    <a href="{% url 'user_home' %}" class="btn btn-outline-dark my-3">Back</a>
+
+</main>
+{% endblock %}

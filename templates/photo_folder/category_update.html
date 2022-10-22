@@ -14,8 +14,13 @@
                             <label>Category</label>
                             <input name="category" type="text" value="{{category.name}}">
                         </div>
+                        {% for message in messages %}
+                        <p {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                            {{ message }}
+                        </p>
+                        {% endfor %}
                         <button type="submit" class="btn btn-outline-dark my-3">Update</button>
-                    </div>        
+                    </div>
                 </form>
                 <a href="{% url 'categories_list' %}" class="btn btn-outline-dark my-3">Back</a>
 

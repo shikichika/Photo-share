@@ -1,23 +1,28 @@
-from unicodedata import name
 from django.shortcuts import redirect, render
+from django.contrib import messages
+
 
 from .models import Category, Photo
-from .forms import LoginGalleryForm
 from users.models import Galleries
+from .decorators import login_required_gallery
+from .utils import judge_images
 
+@login_required_gallery
 def gallery(request):
 
     #categoryごとに検索
     category = request.GET.get('category')
     if category == None:
-        photos = Photo.objects.all()
+        photos = Photo.objects.filter(
+            gallery_id = Galleries.objects.get(pk = request.session['gallery_id']),
+            )
     else:
         photos = Photo.objects.filter(
             gallery_id = Galleries.objects.get(pk = request.session['gallery_id']),
             category__name__icontains = category,
             )
     
-    categories = Category.objects.filter()
+    categories = Category.objects.filter(gallery_id = Galleries.objects.get(pk = request.session['gallery_id']))
     context = {
         'categories':categories,
         'photos' : photos
@@ -25,7 +30,7 @@ def gallery(request):
     return render(request, 'photo_folder/gallery.html', context)
 
 
-
+@login_required_gallery
 def photo_detail(request, pk):
     photo = Photo.objects.get(
         id=pk,
@@ -36,7 +41,7 @@ def photo_detail(request, pk):
         }
     return render(request, 'photo_folder/photo_detail.html', context)
 
-
+@login_required_gallery
 def photo_add(request):
     categories = Category.objects.filter(gallery_id = request.session['gallery_id'])
 
@@ -45,16 +50,35 @@ def photo_add(request):
         image = request.FILES.get('image')
 
         if data['category'] !='none':
-            category = Category.objects.get(name=data['category'])
+            category = Category.objects.get(
+                gallery_id = Galleries.objects.get(id = request.session['gallery_id']),
+                name=data['category']
+                )
         elif data['category_new'] != '':
-            category_new = Category.objects.create(name=data['category_new'])
-            category = Category.objects.get(name=category_new)
+
+            if Category.objects.filter(gallery_id = Galleries.objects.get(id = request.session['gallery_id']),name=data['category']).exists() == False:
+                category_new = Category.objects.create(
+                    gallery_id = Galleries.objects.get(id = request.session['gallery_id']),
+                    name=data['category_new']
+                    )
+                category = Category.objects.get(
+                    gallery_id = Galleries.objects.get(id = request.session['gallery_id']),
+                    name=category_new
+                    )
+            else:
+
+                messages.error(request, 'The category already exists')
+                return redirect('photo_add')
             
         else:
             category = None
+
+        if judge_images(image) == False:
+            messages.error(request, 'Your photo is prohibited')
+            return redirect('photo_add')
         
-        photo = Photo.objects.create(
-            gallery_id = request.session['gallery_id'],
+        Photo.objects.create(
+            gallery_id = Galleries.objects.get(id = request.session['gallery_id']),
             category=category,
             title = data['title'],
             description = data['discription'],
@@ -68,6 +92,8 @@ def photo_add(request):
     }
     return render(request, 'photo_folder/photo_add.html', context)
 
+
+@login_required_gallery
 def photo_update(request, pk):
 
     photo = Photo.objects.get(
@@ -75,7 +101,6 @@ def photo_update(request, pk):
         id=pk
         )
     categories = Category.objects.all()
-    print(pk)
     if request.method == 'POST':
         
         data = request.POST
@@ -91,12 +116,13 @@ def photo_update(request, pk):
 
     return render(request, 'photo_folder/photo_update.html', context)
 
+@login_required_gallery
 def photo_delete(request, pk):
     Photo.objects.filter(id=pk).delete()
     return redirect('gallery')
 
 
-
+@login_required_gallery
 def categories_list(request):
 
     categories = Category.objects.filter(
@@ -111,12 +137,18 @@ def categories_list(request):
 
 
 
+@login_required_gallery
 def category_update(request, pk):
 
     category = Category.objects.get(id = pk)
 
     if request.method == 'POST':
         category_name = request.POST.get('category')
+
+        if Category.objects.filter(name=category_name).exists() == True:
+            messages.error(request, 'The category already exists')
+            return redirect('category_update')
+
         category = Category.objects.filter(id = pk)
         category.update(name = category_name)
 
@@ -134,25 +166,40 @@ def category_delete(request, pk):
     return redirect('categories_list')
 
 
-
+@login_required_gallery
 def gallery_login(request):
-    form = LoginGalleryForm()
 
-    if request.method == "POST":
-        form = LoginGalleryForm(request.POST)
-        print("form" , form.is_valid(), form)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            password = form.cleaned_data['password']
-            
-            gallery = Galleries.objects.filter(name= name, password=password)
-            request.session['gallery_id'] = gallery[0].pk
-            request.session['gallery_name'] = gallery[0].name
+    try:
+        galley_id = request.session['gallery_id'] 
+        gallery_name = request.session['gallery_name']
 
-            return redirect('gallery')
+        return redirect('gallery')
 
-    context = {
-        'form': form
-    }
+    except:
 
-    return render(request, 'photo_folder/login_gallery.html', context)
+        if request.method == 'POST':
+            name = request.POST.get('name')
+            password = request.POST.get('password')
+
+            is_existed = Galleries.objects.filter(name=name, password=password).exists()
+
+            if is_existed:
+                gallery = Galleries.objects.filter(name=name, password=password)
+
+                request.session['gallery_id'] = gallery[0].pk
+                request.session['gallery_name'] = gallery[0].name
+
+                return redirect('gallery')
+
+            messages.error(request, 'Invalid login')
+
+        return render(request, 'photo_folder/login_gallery.html')
+
+
+@login_required_gallery
+def gallery_logout(request):
+    
+    del request.session['gallery_id']
+    del request.session['gallery_name'] 
+
+    return redirect('home')

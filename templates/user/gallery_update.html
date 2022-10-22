@@ -1,28 +1,34 @@
 {% extends 'user_base.html' %}
 
 {% block content %}
+
 <body>
-<div class="container m-5">
-    <div class="row justify-content-center">
-        <div class="col">
+    <div class="container m-5">
+        <div class="row justify-content-center">
+            <div class="col">
 
-            <form method="POST">
-                {% csrf_token %}
-                <div class="card">
-                    <label>Gallery name</label>
-                    <input name="name" type="text" value="{{gallery.name}}">
-                    <label>Gallery password</label>
-                    <input name="password" type="password" value="{{gallery.password}}">
-                    <label>Gallery description</label>
-                    <input name="description" type="text" value="{{gallery.description}}">
-                </div>
-                <button type="submit" class="btn btn-outline-dark my-3">Update</button>
-            </form>
-            <a href="{% url 'gallery_detail' gallery.slug%}" class="btn btn-outline-dark my-3">Back</a>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="card">
+                        <label>Gallery name</label>
+                        <input name="name" type="text" value="{{gallery.name}}">
+                        <label>Gallery password</label>
+                        <input name="password" type="password" value="{{gallery.password}}">
+                        <label>Gallery description</label>
+                        <input name="description" type="text" value="{{gallery.description}}">
+                    </div>
+                    {% for message in messages %}
+                    <p {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                        {{ message }}
+                    </p>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-outline-dark my-3">Update</button>
+                </form>
+                <a href="{% url 'gallery_detail' gallery.slug%}" class="btn btn-outline-dark my-3">Back</a>
 
+            </div>
         </div>
-    </div>
 
-</div>
+    </div>
 </body>
 {% endblock %}

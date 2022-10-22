@@ -1,0 +1,19 @@
+{% extends 'user_base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+    <h1 class="mt-5">Delete the account form</h1>
+    <a href="{%url 'user_delete'%}" class="btn btn-danger" onclick="return confirm('Are you sure to delete your account?')">Delete account</a> 
+    <p class="lead mt-3">
+        Please make sure that your all galleries are deleted before you delete your account
+        Once you delete your account, you'll never access your account and your galleries.
+    </p>
+     
+     <a href="{% url 'user_detail' %}" class="btn btn-outline-dark my-3">Back</a>
+</div>
+
+{% endblock %}
+
+

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <body>
     <div class="container p-5 m-5">
 
@@ -26,7 +27,7 @@
                         <div class="form-group m-3">
                             <label>Create a new category</label>
                             <input name="category_new" class="form-control" type="text"
-                            placeholder="Create a new category">
+                                placeholder="Create a new category">
                         </div>
                         <div class="form-group m-3">
                             <label>Upload image</label>
@@ -37,6 +38,11 @@
                             <input name="discription" class="form-control" type="text"
                                 placeholder="Write a description">
                         </div>
+                        {% for message in messages %}
+                        <p {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                            {{ message }}
+                        </p>
+                        {% endfor %}
 
                         <button type="submit" class="btn btn-outline-dark m-3">Create</button>
                     </form>
