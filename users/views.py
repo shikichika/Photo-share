@@ -125,7 +125,7 @@ def gallery_into(request, slug):
     gallery = Galleries.objects.filter(slug = slug)
 
     request.session['gallery_id'] = gallery[0].pk
-    request.session['galley_name'] = gallery[0].name
+    request.session['gallery_name'] = gallery[0].name
 
     return redirect('gallery')
 
