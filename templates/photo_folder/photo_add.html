@@ -38,12 +38,13 @@
                             <input name="discription" class="form-control" type="text"
                                 placeholder="Write a description">
                         </div>
+                        <ul>
                         {% for message in messages %}
-                        <p {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                        <li {% if message.tags %}class="{{ message.tags }}" {% endif %}>
                             {{ message }}
-                        </p>
+                        </li>
                         {% endfor %}
-
+                        </ul>
                         <button type="submit" class="btn btn-outline-dark m-3">Create</button>
                     </form>
 

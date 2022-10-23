@@ -181,6 +181,7 @@ def gallery_login(request):
             name = request.POST.get('name')
             password = request.POST.get('password')
 
+
             is_existed = Galleries.objects.filter(name=name, password=password).exists()
 
             if is_existed:

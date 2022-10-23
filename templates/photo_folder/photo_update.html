@@ -27,11 +27,13 @@
                             <label>Discription</label>
                             <input name="description " type="text" value="{{photo.description }}">
                         </div>
+                        <ul>
                         {% for message in messages %}
-                        <p {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                        <li {% if message.tags %}class="{{ message.tags }}" {% endif %}>
                             {{ message }}
-                        </p>
+                        </li>
                         {% endfor %}
+                        </ul>
                         <button type="submit" class="btn btn-outline-dark my-3"
                             onclick="return confirm('Are you sure to update this?')">Update</button>
                     </div>

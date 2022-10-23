@@ -2,9 +2,13 @@
 <html lang="en">
 
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex,nofollow" />
+    <link rel="icon" href="{% static 'logo.png' %}" sizes="16x16" type="image/png" /> 
+    <link rel="apple-touch-icon-precomposed" href="{% static 'logo.png' %}" />
     <title>Photo Share</title>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -119,11 +123,13 @@
                         <label>Password</label>
                         <input name="password" type="password" class="form-control" placeholder="Enter password">
                     </div>
+                    <ul>
                     {% for message in messages %}
-                    <p {% if message.tags %}class="{{ message.tags }}" {% endif %}>
+                    <li {% if message.tags %}class="{{ message.tags }}" {% endif %}>
                         {{ message }}
-                    </p>
+                    </li>
                     {% endfor %}
+                    </ul>
                     <button type="submit" class="btn btn-black">Login</button>
 
                 </form>

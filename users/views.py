@@ -1,9 +1,11 @@
 from django.shortcuts import redirect, render
 from django.contrib import messages
 
+
 from .models import Galleries, Owner
 from .forms import RegisterForm, LoginForm
 from .decorators import login_required_user
+from .utils import make_hash
 
 @login_required_user
 def user_home(request):
@@ -53,6 +55,8 @@ def gallery_create(request):
             messages.error(request, 'The gallery name can\'t be use')
             return redirect('gallery_create')
 
+        
+
         Galleries.objects.create(
             user = Owner.objects.get(pk=request.session['id']),
             name = data['name'], 
@@ -92,6 +96,7 @@ def gallery_update(request, slug):
         elif is_created:
             messages.error(request, 'The gallery name can\'t be use')
             return redirect('gallery_create')
+
         
         Galleries.objects.filter(slug=slug).update(name = data['name'], slug = slug, password = data['password'], description = data['description'])
 
@@ -135,10 +140,12 @@ def register(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
+            hash_password = make_hash(email, password)
+
             owner = Owner.objects.create(
                 username = username,
                 email= email,
-                password = password,
+                password = hash_password,
             )
 
             owner.save()
@@ -169,9 +176,10 @@ def user_login(request):
             if form.is_valid():
                 email = form.cleaned_data['email']
                 password = form.cleaned_data['password']
+                hash_password = make_hash(email, password)
 
                 try:       
-                    user = Owner.objects.filter(email = email, password=password)
+                    user = Owner.objects.filter(email = email, password=hash_password)
                     request.session['username'] = user[0].username
                     request.session['id'] = user[0].pk
                     
@@ -199,6 +207,11 @@ def user_detail(request):
 
 @login_required_user
 def user_update(request):
+
+    email = Owner.objects.filter(
+        id = request.session['id']
+    )[0].email
+
     if request.method == 'POST':
         new_password = request.POST.get('new_password')
         confirm_password = request.POST.get('confirm_password')
@@ -215,13 +228,11 @@ def user_update(request):
             messages.error(request, 'Password must be more than 6 and less than 13')
             return redirect('user_update')
 
-        Owner.objects.filter(id = request.session['id']).update(password=new_password)
+        hash_password = make_hash(email, new_password)
+        Owner.objects.filter(id = request.session['id']).update(password=hash_password)
 
         return redirect('user_home')
-    
-    email = Owner.objects.filter(
-        id = request.session['id']
-    )[0].email
+
 
     context = {
         'email':email
